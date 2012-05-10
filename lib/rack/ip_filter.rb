@@ -1,9 +1,10 @@
 require 'netaddr'
-require 'ip_filter'
 
 module Rack
 
   class IpFilter
+
+    VERSION = "0.0.1"
 
     def initialize(app, ip_whitelist, path)
       @app = app
@@ -12,18 +13,17 @@ module Rack
     end
 
     def call(env)
-      @env = env
-
-      if white_listed?
+      if white_listed?(env)
         @app.call(env)
       else
         forbidden!
       end
     end
     
-    def white_listed?
-      return true unless env['REQUEST_PATH'] =~ /^#{@path}/ 
-      
+    def white_listed?(env)
+      return true unless env['REQUEST_PATH'] =~ /^#{@path}/
+
+      remote_addr = remote_address(env)
       remote_addr == '127.0.0.1' || @ip_whitelist.any? { |ip_range| ip_range.contains?(remote_addr) }
     end
 
@@ -31,13 +31,11 @@ module Rack
       
     end
 
-    def remote_address
-      remote_addr = begin
-        if @env['HTTP_X_FORWARDED_FOR']
-          @env['HTTP_X_FORWARDED_FOR'].split(',').first.strip
-        else
-          @env['REMOTE_ADDR']
-        end
+    def remote_address(env)
+      if env['HTTP_X_FORWARDED_FOR']
+        env['HTTP_X_FORWARDED_FOR'].split(',').first.strip
+      else
+        env['REMOTE_ADDR']
       end
     end
 
