@@ -1,5 +1,7 @@
 # -*- encoding: utf-8 -*-
-require File.expand_path('../lib/rack/ip_filter', __FILE__)
+lib = File.expand_path('../lib/', __FILE__)
+$:.unshift lib unless $:.include?(lib)
+require 'rack/ip_filter'
 
 Gem::Specification.new do |gem|
   gem.authors       = ["Mike Evans"]

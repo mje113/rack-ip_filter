@@ -4,7 +4,7 @@ module Rack
 
   class IpFilter
 
-    VERSION = "0.0.1"
+    VERSION = "0.0.2"
 
     def initialize(app, ip_whitelist, path)
       @app = app
