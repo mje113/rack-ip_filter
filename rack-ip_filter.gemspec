@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 lib = File.expand_path('../lib/', __FILE__)
 $:.unshift lib unless $:.include?(lib)
-require 'rack/ip_filter'
+require 'ip_filter'
 
 Gem::Specification.new do |gem|
   gem.authors       = ["Mike Evans"]
@@ -18,5 +18,5 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "rack-ip_filter"
   gem.require_paths = ["lib"]
-  gem.version       = Rack::IpFilter::VERSION
+  gem.version       = IpFilter::VERSION
 end

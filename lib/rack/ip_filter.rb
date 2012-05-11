@@ -1,36 +1,28 @@
-require 'netaddr'
+require 'ip_filter'
 
 module Rack
 
   class IpFilter
 
-    VERSION = "0.0.2"
-
-    def initialize(app, ip_whitelist, path)
-      @app = app
-      @ip_whitelist = ip_whitelist.map { |ip| NetAddr::CIDR.create(ip) }
+    def initialize(app, list, path)
+      @app  = app
       @path = path
+      @list = list
     end
 
     def call(env)
-      if white_listed?(env)
+      if approved?(env)
         @app.call(env)
       else
         forbidden!
       end
     end
+
+    def approved?(env)
+      return true unless path_match?(env['REQUEST_PATH'])
+      @list.approved?(remote_address(env))
+    end
     
-    def white_listed?(env)
-      return true unless env['REQUEST_PATH'] =~ /^#{@path}/
-
-      remote_addr = remote_address(env)
-      remote_addr == '127.0.0.1' || @ip_whitelist.any? { |ip_range| ip_range.contains?(remote_addr) }
-    end
-
-    def black_listed?(env)
-      
-    end
-
     def remote_address(env)
       if env['HTTP_X_FORWARDED_FOR']
         env['HTTP_X_FORWARDED_FOR'].split(',').first.strip
@@ -41,6 +33,10 @@ module Rack
 
     def forbidden!
       [403, { 'Content-Type' => 'text/html', 'Content-Length' => '0' }, []]
+    end
+
+    def path_match?(path)
+      path =~ /^#{@path}/
     end
 
   end
