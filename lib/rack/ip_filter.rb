@@ -4,7 +4,7 @@ module Rack
 
   class IpFilter
 
-    def initialize(app, list, path)
+    def initialize(app, list, path = '/')
       @app  = app
       @path = path
       @list = list
