@@ -38,10 +38,10 @@ See example/app.rb for a simple Sinatra app which illustrates proper usage.
 
 ## Options
 
-Rack::IpFilter takes two arguments, the first is an object that responds to `approved?` and returns a boolean.
+`Rack::IpFilter` takes two arguments, the first is an object that responds to `approved?` and returns a boolean.
 The second argument is the path to apply the filter, defaults to root: `'/'`.
 
-IpFilter::WhiteList and IpFilter::Black list ship with the gem and explicitly allow or block remote ip addresses
+`IpFilter::WhiteList` and `IpFilter::BlackList` ship with the gem and explicitly allow or block remote ip addresses
 respectively.
 
 ## Contributing
